@@ -1,14 +1,21 @@
 package ITC313_Assignment1.ITC313_Assignment1;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -43,37 +50,41 @@ public class TrafficLightSimulation extends Application {
 		primaryStage.setTitle("Traffic Light Simulation");
 
 		// define the canvas size
-		int width = 400;
-		int height = 250;
+		int width = 200;
+		int height = 125;
 
 		// define the draw height the circles start at, and the space between them
-		int radius = 20;
+		int radius = 10;
 		int drawHeight = 50;
-		int heightDiff = radius * 2 + 10;
+		int gap = 5;
+		int heightDiff = radius * 2 + gap;
 
 		// define the border rectangle
-		final Rectangle rect = new Rectangle(width / 2 - radius - 10, drawHeight - radius - 10, radius * 2 + 20, drawHeight + (heightDiff * 2) + 10);
+		final Rectangle rect = new Rectangle(width / 2 - radius - gap, drawHeight - radius - gap, radius * 2 + gap * 2, drawHeight + (heightDiff) + gap);
 		rect.setFill(Color.WHITE);
 		rect.setStroke(Color.BLACK);
-		rect.setStrokeWidth(2);
+		rect.setStrokeWidth(1);
 
 		// create the circles
 		final Circle topCircle = new Circle(width / 2, drawHeight, radius);
 		topCircle.setFill(Color.WHITE);
-		topCircle.setStrokeWidth(2);
+		topCircle.setStrokeWidth(1);
 		topCircle.setStroke(Color.BLACK);
 		drawHeight += heightDiff;
 
 		final Circle midCircle = new Circle(width / 2, drawHeight, radius);
 		midCircle.setFill(Color.WHITE);
-		midCircle.setStrokeWidth(2);
+		midCircle.setStrokeWidth(1);
 		midCircle.setStroke(Color.BLACK);
 		drawHeight += heightDiff;
 
 		final Circle botCircle = new Circle(width / 2, drawHeight, radius);
 		botCircle.setFill(Color.WHITE);
-		botCircle.setStrokeWidth(2);
+		botCircle.setStrokeWidth(1);
 		botCircle.setStroke(Color.BLACK);
+		
+		// group them all together
+		final Group trafficLight = new Group(rect, topCircle, midCircle, botCircle);
 				
 		// create the radio buttons
 		RadioButton topButton = new RadioButton("Red");
@@ -84,18 +95,18 @@ public class TrafficLightSimulation extends Application {
         botButton.setUserData("Green");
         
         // Group them so only one can be toggled at a time
-        final ToggleGroup radioGroup = new ToggleGroup();
+        final ToggleGroup radioToggleGroup = new ToggleGroup();
         
-        topButton.setToggleGroup(radioGroup);
-        midButton.setToggleGroup(radioGroup);
-        botButton.setToggleGroup(radioGroup);
+        topButton.setToggleGroup(radioToggleGroup);
+        midButton.setToggleGroup(radioToggleGroup);
+        botButton.setToggleGroup(radioToggleGroup);
         
         // define what behaviour toggling buttons has
-        radioGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+        radioToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
             public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
 
-                 if (radioGroup.getSelectedToggle() != null) {
-                	 String selectedColour = radioGroup.getSelectedToggle().getUserData().toString();
+                 if (radioToggleGroup.getSelectedToggle() != null) {
+                	 String selectedColour = radioToggleGroup.getSelectedToggle().getUserData().toString();
                 	 if (selectedColour.equals("Red")) {
                 		 topCircle.setFill(Color.RED);
                 		 midCircle.setFill(Color.WHITE);
@@ -114,14 +125,30 @@ public class TrafficLightSimulation extends Application {
         });
         
         // Place them in a horizontal box group
-        HBox hbox = new HBox(topButton, midButton, botButton);
-        hbox.setAlignment(Pos.BASELINE_CENTER);
+        HBox radioGroup = new HBox(topButton, midButton, botButton);
+        radioGroup.setAlignment(Pos.BASELINE_CENTER);
         
-        // group them together
-        final GridPane grid = new GridPane();
-        grid.setAlignment(Pos.BASELINE_CENTER);
-        grid.getChildren().add(hbox);
-     	final Group root = new Group(rect, topCircle, midCircle, botCircle, grid);
+        // add them all to the root
+        final GridPane root = new GridPane();
+        
+        // set a gap at the top of the grid pane
+        root.setTranslateY(gap);
+        
+        // use a white background
+        root.setStyle("-fx-background-color: white");
+        
+        // align the root to the center
+        root.setAlignment(Pos.BASELINE_CENTER);
+        
+        // place a vertical gap between rows
+        root.setVgap(15);
+        
+        // add the rows
+        root.addRow(0, trafficLight);
+        root.addRow(1, radioGroup);
+        
+        // align the node within the gridpane
+        GridPane.setHalignment(trafficLight, HPos.CENTER);
 
 		// and add them to the scene, also setting background colour
 		final Scene scene = new Scene(root, width, height, Color.WHITE);

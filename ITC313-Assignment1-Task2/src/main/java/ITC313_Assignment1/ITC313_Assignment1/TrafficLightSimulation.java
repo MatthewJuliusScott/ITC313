@@ -147,7 +147,7 @@ public class TrafficLightSimulation extends Application {
         root.addRow(0, trafficLight);
         root.addRow(1, radioGroup);
         
-        // align the node within the gridpane
+        // align the node within the GridPane
         GridPane.setHalignment(trafficLight, HPos.CENTER);
 
 		// and add them to the scene, also setting background colour

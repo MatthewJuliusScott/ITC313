@@ -122,7 +122,7 @@ public class TrafficLightSimulation extends Application {
         HBox radioGroup = new HBox(topButton, midButton, botButton);
         radioGroup.setAlignment(Pos.BASELINE_CENTER);
         
-        // add them all to the root
+        // add them all to a layout pane
         final GridPane root = new GridPane();
         
         // set a gap at the top of the grid pane

@@ -72,6 +72,7 @@ public class ArcheryTarget extends Application {
 			circles.add(circle);
 			radius -= radiusDiff;
 		}
+		// add them all to a layout pane
 		root.getChildren().addAll(circles);
 
 		// and add them to the scene, also setting background colour

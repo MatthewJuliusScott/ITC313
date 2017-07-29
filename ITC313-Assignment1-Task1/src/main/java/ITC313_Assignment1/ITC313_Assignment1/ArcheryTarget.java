@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -38,7 +39,7 @@ public class ArcheryTarget extends Application {
 		int width = 400;
 		int height = 250;
 
-		final Group root = new Group();
+		final StackPane root = new StackPane();
 		
 		// define the circles
 		final int startRadius = 90;

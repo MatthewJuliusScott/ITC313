@@ -1,9 +1,9 @@
+
 package ITC313_Assignment1.ITC313_Assignment1;
 
 import java.util.ArrayList;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -27,7 +27,7 @@ public class ArcheryTarget extends Application {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
 	 */
 	@Override
@@ -36,11 +36,11 @@ public class ArcheryTarget extends Application {
 		primaryStage.setTitle("Archery Target");
 
 		// define the canvas size
-		int width = 400;
-		int height = 250;
+		final int width = 400;
+		final int height = 250;
 
 		final StackPane root = new StackPane();
-		
+
 		// define the circles
 		final int startRadius = 90;
 		final int radiusDiff = 20;
@@ -48,26 +48,26 @@ public class ArcheryTarget extends Application {
 
 		// create them, set their position, radius and colour
 		int radius = startRadius;
-		ArrayList<Circle> circles = new ArrayList<Circle>();
+		final ArrayList<Circle> circles = new ArrayList<Circle>();
 		for (int i = 1; i <= numOfCircles; i++) {
-			Circle circle = new Circle(width / 2, height / 2, radius);
+			final Circle circle = new Circle(width / 2, height / 2, radius);
 			Color color = Color.WHITE;
 			switch (i) {
-			case 1:
-				color = Color.WHITE;
-				break;
-			case 2:
-				color = Color.BLACK;
-				break;
-			case 3:
-				color = Color.CYAN;
-				break;
-			case 4:
-				color = Color.RED;
-				break;
-			case 5:
-				color = Color.GOLD;
-				break;
+				case 1 :
+					color = Color.WHITE;
+					break;
+				case 2 :
+					color = Color.BLACK;
+					break;
+				case 3 :
+					color = Color.CYAN;
+					break;
+				case 4 :
+					color = Color.RED;
+					break;
+				case 5 :
+					color = Color.GOLD;
+					break;
 			}
 			circle.setFill(color);
 			circles.add(circle);

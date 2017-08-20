@@ -193,7 +193,7 @@ public class FontTester extends Application {
 		root.addRow(1, displayText);
 		GridPane.setHalignment(displayText, HPos.CENTER);
 
-		// make the checkbox horizontal box text fill all columns and center
+		// make the checkbox horizontal box text and center
 		HBox checkBoxHBox = new HBox();
 		checkBoxHBox.setAlignment(Pos.CENTER);
 		checkBoxHBox.getChildren().addAll(boldCheckBox, italicCheckBox);

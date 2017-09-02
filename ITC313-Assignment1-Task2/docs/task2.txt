@@ -1,0 +1,8 @@
+How it Works:
+Uses JavaFX to draw coloured circles and a rectangle on a background. Uses some listeners to
+change the colour of the circles when radio buttons are selected.
+
+Assumptions:
+I assumed the program might need to be modified in future, so it uses a few variables to define
+size of stage etc. which can be modified without needing to reposition anything else, as they are
+defined relative to those variables.

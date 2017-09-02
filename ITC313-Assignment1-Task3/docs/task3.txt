@@ -1,0 +1,9 @@
+How it Works:
+Uses JavaFX to draw text and some controls (select, and checkbox). Uses some listeners to
+change the font, size, weight and posture. Also expands to fit the text as the size changes.
+Used DRY principals and extracted the method setDisplayText as it is called in many places with
+only minor variations.
+
+Assumptions:
+Assumed it will be run on a variety of Operating Systems, that may not have the same fonts as my
+machine, so it will get up to the first 10 available fonts on the system, rather than hardcoded values.

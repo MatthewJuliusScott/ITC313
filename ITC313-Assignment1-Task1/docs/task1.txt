@@ -1,1 +1,9 @@
-I chose a stackpane because everything is layered and centered in the middle for an Archery target.
+How it Works:
+Uses JavaFX to draw coloured circles on a background. Starts with defining a couple of the variables,
+creates the Circles and then adds them to the StackPane which is added to the scene with a set
+background colour. 
+
+Assumptions:
+I assumed the program might need to be modified in future, so it uses a few variables to define a pattern
+that can be expanded to a X size archery target with Y concentric circles, rather than hard coded values.  
+I chose a Stackpane because everything is layered and centered in the middle for an Archery target.

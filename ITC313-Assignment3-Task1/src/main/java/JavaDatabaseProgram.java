@@ -5,11 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+
+import javax.swing.event.ListSelectionEvent;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -36,7 +42,7 @@ public class JavaDatabaseProgram extends Application {
 		        + "lastName VARCHAR(30) NOT NULL,\r\n"
 		        + "firstName VARCHAR(30) NOT NULL,\r\n"
 		        + "middleInitial VARCHAR(2) NOT NULL,\r\n"
-		        + "address VARCHAR(255) NOT NULL,\r\n"
+		        + "address VARCHAR(100) NOT NULL,\r\n"
 		        + "city VARCHAR(30) NOT NULL,\r\n"
 		        + "state VARCHAR(3) NOT NULL,\r\n"
 		        + "telephoneNumber VARCHAR(10) NOT NULL,\r\n" + ");";
@@ -79,7 +85,7 @@ public class JavaDatabaseProgram extends Application {
 
 		if (!isStaffValid(staff)) {
 			throw new Exception(
-			        "Cannot insert staff member. Ensure all fields (e.g., Last name, first name, etc.) are not left blank, and that the telephone number contains only digits. Ensure the state is valid.");
+			        "Failed to insert. Ensure all fields (e.g., Last name, first name, etc.) are not left blank, and that the telephone number contains only digits. Ensure the state is valid.");
 		}
 
 		int id = 0;
@@ -140,7 +146,7 @@ public class JavaDatabaseProgram extends Application {
 	}
 
 	public static Staff viewStaff(String string)
-	        throws SQLException, NumberFormatException {
+	        throws Exception {
 
 		int id = Integer.parseInt(string);
 
@@ -198,7 +204,7 @@ public class JavaDatabaseProgram extends Application {
 	 *            the string
 	 * @return true, if is blank
 	 */
-	private static boolean isBlank(String string) {
+	public static boolean isBlank(String string) {
 		if (string != null && string.length() > 0 && !string.matches("\\s+")) {
 			return false;
 		} else {
@@ -237,7 +243,7 @@ public class JavaDatabaseProgram extends Application {
 
 		if (!isStaffValid(staff)) {
 			throw new Exception(
-			        "Cannot update staff member. Ensure all fields (e.g., Last name, first name, etc.) are not left blank, and that the telephone number contains only digits. Ensure the state is valid.");
+			        "Failed to update. Cannot update staff member. Ensure all fields (e.g., Last name, first name, etc.) are not left blank, and that the telephone number contains only digits. Ensure the state is valid. (ACT, NSW, NT, QLD, SA, TAS, VIC, WA)");
 		}
 
 		Connection conn = null;
@@ -299,10 +305,23 @@ public class JavaDatabaseProgram extends Application {
 		final Label cityLabel = new Label("City");
 		final Label stateLabel = new Label("State");
 		final Label telephoneLabel = new Label("Telephone");
+		
+		// Australian states
+		final ObservableList<String> stateOptions = FXCollections
+		        .observableArrayList();
+		stateOptions.add("");
+		stateOptions.add("ACT");
+		stateOptions.add("NSW");
+		stateOptions.add("NT");
+		stateOptions.add("QLD");
+		stateOptions.add("SA");
+		stateOptions.add("TAS");
+		stateOptions.add("VIC");
+		stateOptions.add("WA");
 
-		// text fields
-		TextField idTextField = new TextField();
-		TextField lastNameTextField = new TextField();
+		// text fields / combo box
+		final TextField idTextField = new TextField();
+		final TextField lastNameTextField = new TextField();
 		lastNameTextField.textProperty().addListener(listener -> {
 			if (!isBlank(lastNameTextField.getText())) {
 				idTextField.setDisable(true);
@@ -310,7 +329,7 @@ public class JavaDatabaseProgram extends Application {
 				idTextField.setDisable(false);
 			}
 		});
-		TextField firstNameTextField = new TextField();
+		final TextField firstNameTextField = new TextField();
 		firstNameTextField.textProperty().addListener(listener -> {
 			if (!isBlank(firstNameTextField.getText())) {
 				idTextField.setDisable(true);
@@ -318,7 +337,7 @@ public class JavaDatabaseProgram extends Application {
 				idTextField.setDisable(false);
 			}
 		});
-		TextField middleInitialTextField = new TextField();
+		final TextField middleInitialTextField = new TextField();
 		middleInitialTextField.textProperty().addListener(listener -> {
 			if (!isBlank(middleInitialTextField.getText())) {
 				idTextField.setDisable(true);
@@ -326,7 +345,7 @@ public class JavaDatabaseProgram extends Application {
 				idTextField.setDisable(false);
 			}
 		});
-		TextField addressTextField = new TextField();
+		final TextField addressTextField = new TextField();
 		addressTextField.textProperty().addListener(listener -> {
 			if (!isBlank(addressTextField.getText())) {
 				idTextField.setDisable(true);
@@ -334,7 +353,7 @@ public class JavaDatabaseProgram extends Application {
 				idTextField.setDisable(false);
 			}
 		});
-		TextField cityTextField = new TextField();
+		final TextField cityTextField = new TextField();
 		cityTextField.textProperty().addListener(listener -> {
 			if (!isBlank(cityTextField.getText())) {
 				idTextField.setDisable(true);
@@ -342,15 +361,15 @@ public class JavaDatabaseProgram extends Application {
 				idTextField.setDisable(false);
 			}
 		});
-		TextField stateTextField = new TextField();
-		stateTextField.textProperty().addListener(listener -> {
-			if (!isBlank(stateTextField.getText())) {
+		final ComboBox<String> stateComboBox = new ComboBox<String>(stateOptions);
+		stateComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+			if (!isBlank(stateComboBox.getValue())) {
 				idTextField.setDisable(true);
 			} else {
 				idTextField.setDisable(false);
 			}
 		});
-		TextField telephoneTextField = new TextField();
+		final TextField telephoneTextField = new TextField();
 		telephoneTextField.textProperty().addListener(listener -> {
 			if (!isBlank(telephoneTextField.getText())) {
 				idTextField.setDisable(true);
@@ -360,7 +379,7 @@ public class JavaDatabaseProgram extends Application {
 		});
 
 		// buttons
-		Button viewButton = new Button("View");
+		final Button viewButton = new Button("View");
 		viewButton.setOnAction(actionEvent -> {
 			try {
 				Staff staff = viewStaff(idTextField.getText());
@@ -370,7 +389,7 @@ public class JavaDatabaseProgram extends Application {
 				middleInitialTextField.setText(staff.getMiddleInitial());
 				addressTextField.setText(staff.getAddress());
 				cityTextField.setText(staff.getCity());
-				stateTextField.setText(staff.getState());
+				stateComboBox.setValue(staff.getState());
 				telephoneTextField.setText(staff.getTelephoneNumber());
 				messageText.setText("Record found.");
 			} catch (Exception e) {
@@ -378,7 +397,7 @@ public class JavaDatabaseProgram extends Application {
 			}
 		});
 
-		Button insertButton = new Button("Insert");
+		final Button insertButton = new Button("Insert");
 		insertButton.setOnAction(actionEvent -> {
 			try {
 				Staff staff = new Staff();
@@ -387,17 +406,17 @@ public class JavaDatabaseProgram extends Application {
 				staff.setMiddleInitial(middleInitialTextField.getText());
 				staff.setAddress(addressTextField.getText());
 				staff.setCity(cityTextField.getText());
-				staff.setState(stateTextField.getText());
+				staff.setState(stateComboBox.getPromptText());
 				staff.setTelephoneNumber(telephoneTextField.getText());
 				int id = insertStaff(staff);
 				messageText.setText("Record inserted.");
 				idTextField.setText(String.valueOf(id));
 			} catch (Exception e) {
-				messageText.setText("Failed to insert.");
+				messageText.setText("Failed to insert. " + e.getMessage());
 			}
 		});
 
-		Button updateButton = new Button("Update");
+		final Button updateButton = new Button("Update");
 		updateButton.setOnAction(actionEvent -> {
 			try {
 				Staff staff = new Staff();
@@ -407,16 +426,16 @@ public class JavaDatabaseProgram extends Application {
 				staff.setMiddleInitial(middleInitialTextField.getText());
 				staff.setAddress(addressTextField.getText());
 				staff.setCity(cityTextField.getText());
-				staff.setState(stateTextField.getText());
+				staff.setState(stateComboBox.getValue());
 				staff.setTelephoneNumber(telephoneTextField.getText());
 				updateStaff(staff);
 				messageText.setText("Record updated.");
 			} catch (Exception e) {
-				messageText.setText("Failed to update.");
+				messageText.setText("Failed to update. " + e.getMessage());
 			}
 		});
 
-		Button clearButton = new Button("Clear");
+		final Button clearButton = new Button("Clear");
 		clearButton.setOnAction(actionEvent -> {
 			idTextField.setText("");
 			lastNameTextField.setText("");
@@ -424,12 +443,12 @@ public class JavaDatabaseProgram extends Application {
 			middleInitialTextField.setText("");
 			addressTextField.setText("");
 			cityTextField.setText("");
-			stateTextField.setText("");
+			stateComboBox.setValue("");
 			telephoneTextField.setText("");
 			messageText.setText(defaultMessage);
 		});
 
-		HBox buttonHBox = new HBox();
+		final HBox buttonHBox = new HBox();
 		buttonHBox.getChildren().addAll(viewButton, insertButton, updateButton,
 		        clearButton);
 		buttonHBox.setAlignment(Pos.CENTER);
@@ -451,7 +470,7 @@ public class JavaDatabaseProgram extends Application {
 
 		root.addRow(3, addressLabel, addressTextField);
 
-		root.addRow(4, cityLabel, cityTextField, stateLabel, stateTextField);
+		root.addRow(4, cityLabel, cityTextField, stateLabel, stateComboBox);
 
 		root.addRow(5, telephoneLabel, telephoneTextField);
 

@@ -168,21 +168,39 @@ public class Staff {
 	
 	/**
 	 * @param address the address to set
+	 * @throws Exception 
 	 */
-	public void setAddress(String address) {
+	public void setAddress(String address) throws Exception {
+		if (address.length() > 100) {
+			throw new Exception("Address is too long. It must be 100 characters or less.");
+		} else if (JavaDatabaseProgram.isBlank(address)) {
+			throw new Exception("Address must not be blank.");
+		}
 		this.address = address;
 	}
 	
 	/**
 	 * @param city the city to set
+	 * @throws Exception 
 	 */
-	public void setCity(String city) {
+	public void setCity(String city) throws Exception {
+		if (city.length() > 30) {
+			throw new Exception("City is too long. It must be 100 characters or less.");
+		} else if (JavaDatabaseProgram.isBlank(city)) {
+			throw new Exception("City must not be blank.");
+		}
 		this.city = city;
 	}
 	/**
 	 * @param firstName the firstName to set
+	 * @throws Exception 
 	 */
-	public void setFirstName(String firstName) {
+	public void setFirstName(String firstName) throws Exception {
+		if (firstName.length() > 30) {
+			throw new Exception("First name is too long. It must be 30 characters or less.");
+		} else if (JavaDatabaseProgram.isBlank(firstName)) {
+			throw new Exception("First name must not be blank.");
+		}
 		this.firstName = firstName;
 	}
 	/**
@@ -193,26 +211,52 @@ public class Staff {
 	}
 	/**
 	 * @param lastName the lastName to set
+	 * @throws Exception 
 	 */
-	public void setLastName(String lastName) {
+	public void setLastName(String lastName) throws Exception {
+		if (lastName.length() > 30) {
+			throw new Exception("Last name is too long. It must be 30 characters or less.");
+		} else if (JavaDatabaseProgram.isBlank(lastName)) {
+			throw new Exception("Last name must not be blank.");
+		}
 		this.lastName = lastName;
 	}
 	/**
 	 * @param middleInitial the middleInitial to set
+	 * @throws Exception 
 	 */
-	public void setMiddleInitial(String middleInitial) {
+	public void setMiddleInitial(String middleInitial) throws Exception {
+		if (middleInitial.length() > 2) {
+			throw new Exception("Middle initial is too long. It must be 2 characters or less.");
+		} else if (JavaDatabaseProgram.isBlank(middleInitial)) {
+			throw new Exception("Middle initial must not be blank.");
+		}
 		this.middleInitial = middleInitial;
 	}
 	/**
 	 * @param state the state to set
+	 * @throws Exception 
 	 */
-	public void setState(String state) {
+	public void setState(String state) throws Exception {
+		if (!state.matches("ACT|NSW|NT|QLD|SA|TAS|VIC|WA")) {
+			throw new Exception("Ensure the state is valid. (ACT, NSW, NT, QLD, SA, TAS, VIC, WA)");
+		} else if (JavaDatabaseProgram.isBlank(state)) {
+			throw new Exception("State must not be blank.");
+		}
 		this.state = state;
 	}
 	/**
 	 * @param telephoneNumber the telephoneNumber to set
+	 * @throws Exception 
 	 */
-	public void setTelephoneNumber(String telephoneNumber) {
+	public void setTelephoneNumber(String telephoneNumber) throws Exception {
+		if (telephoneNumber.length() > 10) {
+			throw new Exception("Telephone number is too long. It must be 10 digits or less.");
+		} else if (JavaDatabaseProgram.isBlank(telephoneNumber)) {
+			throw new Exception("Telephone number must not be blank.");
+		} else if (!telephoneNumber.matches("\\d+")) {
+			throw new Exception("Telephone number must contain digits only.");
+		}
 		this.telephoneNumber = telephoneNumber;
 	}
 	/* (non-Javadoc)

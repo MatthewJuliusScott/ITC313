@@ -5,9 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-
-import javax.swing.event.ListSelectionEvent;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;

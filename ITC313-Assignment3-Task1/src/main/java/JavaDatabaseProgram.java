@@ -21,7 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class JavaDatabaseProgram extends Application {
-
+	
+	private static String tempDirectory = System.getProperty("java.io.tmpdir");
 	private static Stage stage;
 
 	/**
@@ -45,8 +46,7 @@ public class JavaDatabaseProgram extends Application {
 		        + "telephoneNumber VARCHAR(10) NOT NULL,\r\n" + ");";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:testdb", "SA",
-			        "");
+			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.executeUpdate();
@@ -93,8 +93,7 @@ public class JavaDatabaseProgram extends Application {
 		String sql = "INSERT INTO Staff (lastName, firstName, middleInitial, address, city, state, telephoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:testdb", "SA",
-			        "");
+			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			int count = 1;
 			pstmt.setString(count++, staff.getLastName());
@@ -155,8 +154,7 @@ public class JavaDatabaseProgram extends Application {
 		String sql = "SELECT * FROM Staff WHERE id = ? LIMIT 1;";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:testdb", "SA",
-			        "");
+			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 			int count = 1;
 			pstmt.setInt(count++, id);
@@ -245,11 +243,10 @@ public class JavaDatabaseProgram extends Application {
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "UPDATE Staff SET lastName = ?, firstName = ?, middleInitial = ?, address = ?, city = ?, state = ?, telephoneNumber = ?;";
+		String sql = "UPDATE Staff SET lastName = ?, firstName = ?, middleInitial = ?, address = ?, city = ?, state = ?, telephoneNumber = ? WHERE id = ?;";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:testdb", "SA",
-			        "");
+			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 			int count = 1;
 			pstmt.setString(count++, staff.getLastName());
@@ -259,6 +256,9 @@ public class JavaDatabaseProgram extends Application {
 			pstmt.setString(count++, staff.getCity());
 			pstmt.setString(count++, staff.getState());
 			pstmt.setString(count++, staff.getTelephoneNumber());
+			
+			// WHERE clause
+			pstmt.setInt(count++, staff.getId());
 
 			pstmt.executeUpdate();
 
@@ -403,7 +403,7 @@ public class JavaDatabaseProgram extends Application {
 				staff.setMiddleInitial(middleInitialTextField.getText());
 				staff.setAddress(addressTextField.getText());
 				staff.setCity(cityTextField.getText());
-				staff.setState(stateComboBox.getPromptText());
+				staff.setState(stateComboBox.getValue());
 				staff.setTelephoneNumber(telephoneTextField.getText());
 				int id = insertStaff(staff);
 				messageText.setText("Record inserted.");

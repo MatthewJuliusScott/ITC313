@@ -147,7 +147,7 @@ public class BouncingBallAnimation extends Application {
 		 */
 		public void increaseSpeed() {
 			double rate = (double) Math.round(animationRate.get() * 10) / 10;
-			animationRate.set(rate + 0.1);
+			animationRate.set(animationRate.get() < 50 ? rate + 0.1 : 50);
 		}
 
 		/**

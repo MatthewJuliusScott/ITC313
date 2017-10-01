@@ -14,9 +14,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+/**
+ * The Class BouncingBallAnimation.
+ */
 public class BouncingBallAnimation extends Application {
-
-	public BallPane ballPane;
 
 	@Override // Override the start method in the Application class
 	public void start(Stage primaryStage) {
@@ -29,7 +30,10 @@ public class BouncingBallAnimation extends Application {
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
 
-		// increase or decrease the ball velocity with up and down arrow keys
+		BallPane ballPane = new BallPane();
+		ballPane.add();
+
+		// increase or decrease the ball speed with up and down arrow keys
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			@Override
@@ -46,9 +50,6 @@ public class BouncingBallAnimation extends Application {
 				}
 			}
 		});
-
-		ballPane = new BallPane();
-		ballPane.add();
 
 		// Create speed label
 		Label speedLabel = new Label("");

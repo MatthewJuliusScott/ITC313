@@ -372,6 +372,7 @@ public class JavaDatabaseProgram extends Application {
 			}
 		});
 		final TextField middleInitialTextField = new TextField();
+		middleInitialTextField.setMaxWidth(40);
 		middleInitialTextField.textProperty().addListener(listener -> {
 			if (!isBlank(middleInitialTextField.getText())) {
 				idTextField.setDisable(true);

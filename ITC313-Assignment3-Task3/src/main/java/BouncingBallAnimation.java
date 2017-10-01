@@ -19,6 +19,11 @@ import javafx.stage.Stage;
  */
 public class BouncingBallAnimation extends Application {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override // Override the start method in the Application class
 	public void start(Stage primaryStage) {
 
@@ -91,16 +96,22 @@ public class BouncingBallAnimation extends Application {
 			}
 		}, "Animation Thread");
 
-		// Terminate the running thread if the application exits
+		// Terminate the running animation thread if the application exits
 		t.setDaemon(true);
-		// Start the thread
 		t.start();
 	}
 
+	/**
+	 * The Class BallPane.
+	 */
 	public class BallPane extends Pane {
 
+		/** The animation rate. */
 		DoubleProperty animationRate = new SimpleDoubleProperty();
 
+		/**
+		 * Adds a new ball to the ball pane
+		 */
 		public void add() {
 			animationRate.set(1);
 			Color color = new Color(Math.random(), Math.random(), Math.random(),
@@ -108,20 +119,35 @@ public class BouncingBallAnimation extends Application {
 			getChildren().add(new Ball(30, 30, 20, color));
 		}
 
+		/**
+		 * Increases animation speed.
+		 */
 		public void increaseSpeed() {
 			double rate = (double) Math.round(animationRate.get() * 10) / 10;
 			animationRate.set(rate + 0.1);
 		}
 
+		/**
+		 * Decreases animation speed.
+		 */
 		public void decreaseSpeed() {
 			double rate = (double) Math.round(animationRate.get() * 10) / 10;
 			animationRate.set(animationRate.get() > 0 ? rate - 0.1 : 0);
 		}
 
+		/**
+		 * Animation Rate property.
+		 *
+		 * @return the double property
+		 */
 		public DoubleProperty rateProperty() {
 			return animationRate;
 		}
 
+		/**
+		 * Moves the ball, maintains current direction until hitting the edge of
+		 * the pane. Speed it controller by how often this method is called.
+		 */
 		protected void moveBall() {
 			for (Node node : this.getChildren()) {
 				Ball ball = (Ball) node;
@@ -142,10 +168,29 @@ public class BouncingBallAnimation extends Application {
 		}
 	}
 
+	/**
+	 * The Class Ball.
+	 */
 	class Ball extends Circle {
 
-		private double dx = 1, dy = 1;
+		/** The rate of change in x. */
+		private double dx = 1;
+		
+		/** The rate of change in y. */
+		private double dy = 1;
 
+		/**
+		 * Instantiates a new ball.
+		 *
+		 * @param x
+		 *            the x
+		 * @param y
+		 *            the y
+		 * @param radius
+		 *            the radius
+		 * @param color
+		 *            the color
+		 */
 		Ball(double x, double y, double radius, Color color) {
 			super(x, y, radius);
 			setFill(color); // Set ball color
@@ -155,6 +200,9 @@ public class BouncingBallAnimation extends Application {
 	/**
 	 * The main method is only needed for the IDE with limited JavaFX support.
 	 * Not needed for running from the command line.
+	 *
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 		launch(args);

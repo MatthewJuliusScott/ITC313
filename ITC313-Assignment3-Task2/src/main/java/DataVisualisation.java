@@ -1,4 +1,3 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,10 +16,27 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * The Class DataVisualisation. Java GUI application that connects to a database
+ * and displays a pie chart representation for the percentage of staff in the
+ * Staff table that reside in each state. Only displays output for the states
+ * where staff reside. In addition to the pie chart graphic, it reports the
+ * written percentage for each state in a legend that appears at the bottom of
+ * the window.
+ * 
+ * Uses the same database as in JavaDatabaseProgram. Uses Hsqldb embedded
+ * database to avoid any external dependencies for tester. Database is stored in
+ * the Temporary directory returned by System .getProperty("java.io.tmpdir")
+ * e.g. C:\Users\Matthew\AppData\Local\Temp\
+ */
 public class DataVisualisation extends Application {
 
-	private static String tempDirectory = System.getProperty("java.io.tmpdir");
-	private static Stage stage;
+	/** The temp directory. */
+	private static String	tempDirectory	= System
+	        .getProperty("java.io.tmpdir");
+
+	/** The stage. */
+	private static Stage	stage;
 
 	/**
 	 * The main method.
@@ -49,7 +65,8 @@ public class DataVisualisation extends Application {
 		String sql = "SELECT state, COUNT(*) AS count FROM Staff GROUP BY state;";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
+			conn = DriverManager.getConnection(
+			        "jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
@@ -100,14 +117,14 @@ public class DataVisualisation extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Map<String, Integer> staffCountByState = getStaffCountByState();
-		
+
 		stage = primaryStage;
 		stage.setResizable(false);
 
 		primaryStage.setTitle("Staff Location By State");
 
 		Label label = new Label("Staff Location By State");
-		
+
 		// Pie Chart
 		PieChart pieChart = new PieChart();
 
@@ -116,19 +133,22 @@ public class DataVisualisation extends Application {
 		for (Integer current : staffCountByState.values()) {
 			total += current;
 		}
-		
+
 		// construct the slices
-		PieChart.Data[] slices = new PieChart.Data[staffCountByState.values().size()];
+		PieChart.Data[] slices = new PieChart.Data[staffCountByState.values()
+		        .size()];
 		int i = 0;
 		for (Entry<String, Integer> entry : staffCountByState.entrySet()) {
-			slices[i++] = new PieChart.Data(entry.getKey() + getPercentage(total, entry.getValue()), entry.getValue());
+			slices[i++] = new PieChart.Data(
+			        entry.getKey() + getPercentage(total, entry.getValue()),
+			        entry.getValue());
 		}
 
 		pieChart.getData().addAll(slices);
 
 		// add them all to a layout pane
 		final BorderPane root = new BorderPane();
-		
+
 		root.setTop(label);
 		BorderPane.setAlignment(label, Pos.CENTER);
 

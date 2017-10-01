@@ -15,7 +15,15 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 /**
- * The Class BouncingBallAnimation.
+ * The Class BouncingBallAnimation. Displays a bouncing ball using java fx.
+ * Based on code from Student Resources - Course Content: Week 12 -
+ * MultipleBounceBall.java as I do not have access to the textbook. Modified the
+ * program so it has a label which displays the current speed of the ball, users
+ * can increase and decrease the speed of the ball by using an up or down arrow
+ * key, and it uses a thread to animate the bouncing ball movements
+ * 
+ * @see <a href=
+ *      "https://interact2.csu.edu.au/bbcswebdav/courses/S-ITC313_201760_B_D/S-ITC313_201760_B_D_ImportedContent_20170709094511/Student%20Resources%20Folder/Example%20Code/Week%2012/MultipleBounceBall.java">Student Resources - Course Content: Week 12 - MultipleBounceBall.java</a>
  */
 public class BouncingBallAnimation extends Application {
 
@@ -35,8 +43,13 @@ public class BouncingBallAnimation extends Application {
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
 
+		// Add a ball
 		BallPane ballPane = new BallPane();
 		ballPane.add();
+
+		// Pause and resume animation
+		ballPane.setOnMousePressed(e -> ballPane.pause());
+		ballPane.setOnMouseReleased(e -> ballPane.play());
 
 		// increase or decrease the ball speed with up and down arrow keys
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -73,6 +86,14 @@ public class BouncingBallAnimation extends Application {
 						// Wait for animation interval milliseconds.
 						long interval = (long) (50
 						        / ballPane.rateProperty().doubleValue());
+
+						// pause on/off
+						if (ballPane.isPaused()) {
+							Thread.sleep(500);
+							continue;
+						}
+
+						// limit animation speed
 						if (interval > 500) {
 							interval = 500;
 							Thread.sleep(500);
@@ -106,8 +127,10 @@ public class BouncingBallAnimation extends Application {
 	 */
 	public class BallPane extends Pane {
 
+		private boolean	paused			= false;
+
 		/** The animation rate. */
-		DoubleProperty animationRate = new SimpleDoubleProperty();
+		DoubleProperty	animationRate	= new SimpleDoubleProperty();
 
 		/**
 		 * Adds a new ball to the ball pane
@@ -144,6 +167,14 @@ public class BouncingBallAnimation extends Application {
 			return animationRate;
 		}
 
+		public void play() {
+			paused = false;
+		}
+
+		public void pause() {
+			paused = true;
+		}
+
 		/**
 		 * Moves the ball, maintains current direction until hitting the edge of
 		 * the pane. Speed it controller by how often this method is called.
@@ -166,6 +197,15 @@ public class BouncingBallAnimation extends Application {
 				ball.setCenterY(ball.dy + ball.getCenterY());
 			}
 		}
+
+		/**
+		 * Checks if the ball panes animation is paused.
+		 *
+		 * @return true, if is paused
+		 */
+		public boolean isPaused() {
+			return paused;
+		}
 	}
 
 	/**
@@ -174,10 +214,10 @@ public class BouncingBallAnimation extends Application {
 	class Ball extends Circle {
 
 		/** The rate of change in x. */
-		private double dx = 1;
-		
+		private double	dx	= 1;
+
 		/** The rate of change in y. */
-		private double dy = 1;
+		private double	dy	= 1;
 
 		/**
 		 * Instantiates a new ball.

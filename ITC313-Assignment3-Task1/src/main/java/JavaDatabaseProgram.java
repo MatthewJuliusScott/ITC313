@@ -20,10 +20,43 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * The Class JavaDatabaseProgram. Java GUI-based program that allows the user to
+ * view, insert and update information within a database. The database contains
+ * only one table, called Staff, with the following fields: An ID (the primary
+ * key), last name, first name, middle initial (MI), address, city, state (ACT,
+ * NSW, NT, QLD, SA, TAS, VIC, WA), and a telephone number.
+ * 
+ * Allows the user to view a staff record with a specified ID, to insert a new
+ * record into the table, to update any field (except the ID) of an existing
+ * staff member record, and to clear all fields from the display. Displays an
+ * appropriate message indicating the success or failure of the
+ * View/Insert/Update operations. For example, "Record found/record not found"
+ * when the user selects View, "Record Inserted/failed to insert" when the user
+ * selects Insert, and "Record updated/failed to update" when the user selects
+ * Update. When no record is displayed (e.g., when the program first starts), or
+ * when the user selects Clear, display a message inviting the user to view or
+ * insert a new record. When inserting a new record, the ID field should be
+ * generated automatically so that it is unique for the table. The ID field is
+ * only editable when the user chooses to search for a new record to View. IDs
+ * returned from the database through the View operation, or generated as part
+ * of the Insert operation, are not be editable. When Inserting or Updating a
+ * record, all fields (e.g., Last name, first name, etc.) throw an error if left
+ * blank, or if the telephone number doesn't contain only digits or the state is
+ * invalid.
+ * 
+ * Uses Hsqldb embedded database to avoid any external dependencies for tester.
+ * Database is stored in the Temporary directory returned by System
+ * .getProperty("java.io.tmpdir") e.g. C:\Users\Matthew\AppData\Local\Temp\
+ */
 public class JavaDatabaseProgram extends Application {
-	
-	private static String tempDirectory = System.getProperty("java.io.tmpdir");
-	private static Stage stage;
+
+	/** The temp directory. */
+	private static String	tempDirectory	= System
+	        .getProperty("java.io.tmpdir");
+
+	/** The stage. */
+	private static Stage	stage;
 
 	/**
 	 * Creates the staff database table if it doesn't already exist.
@@ -46,7 +79,8 @@ public class JavaDatabaseProgram extends Application {
 		        + "telephoneNumber VARCHAR(10) NOT NULL,\r\n" + ");";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
+			conn = DriverManager.getConnection(
+			        "jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.executeUpdate();
@@ -93,7 +127,8 @@ public class JavaDatabaseProgram extends Application {
 		String sql = "INSERT INTO Staff (lastName, firstName, middleInitial, address, city, state, telephoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
+			conn = DriverManager.getConnection(
+			        "jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			int count = 1;
 			pstmt.setString(count++, staff.getLastName());
@@ -105,9 +140,9 @@ public class JavaDatabaseProgram extends Application {
 			pstmt.setString(count++, staff.getTelephoneNumber());
 
 			pstmt.executeUpdate();
-			
+
 			rs = pstmt.getGeneratedKeys();
-			
+
 			if (rs.next()) {
 				id = rs.getInt(1);
 			}
@@ -141,8 +176,7 @@ public class JavaDatabaseProgram extends Application {
 		launch(args);
 	}
 
-	public static Staff viewStaff(String string)
-	        throws Exception {
+	public static Staff viewStaff(String string) throws Exception {
 
 		int id = Integer.parseInt(string);
 
@@ -154,7 +188,8 @@ public class JavaDatabaseProgram extends Application {
 		String sql = "SELECT * FROM Staff WHERE id = ? LIMIT 1;";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
+			conn = DriverManager.getConnection(
+			        "jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 			int count = 1;
 			pstmt.setInt(count++, id);
@@ -246,7 +281,8 @@ public class JavaDatabaseProgram extends Application {
 		String sql = "UPDATE Staff SET lastName = ?, firstName = ?, middleInitial = ?, address = ?, city = ?, state = ?, telephoneNumber = ? WHERE id = ?;";
 
 		try {
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
+			conn = DriverManager.getConnection(
+			        "jdbc:hsqldb:file:" + tempDirectory + "db ", "SA", "");
 			pstmt = conn.prepareStatement(sql);
 			int count = 1;
 			pstmt.setString(count++, staff.getLastName());
@@ -256,7 +292,7 @@ public class JavaDatabaseProgram extends Application {
 			pstmt.setString(count++, staff.getCity());
 			pstmt.setString(count++, staff.getState());
 			pstmt.setString(count++, staff.getTelephoneNumber());
-			
+
 			// WHERE clause
 			pstmt.setInt(count++, staff.getId());
 
@@ -302,7 +338,7 @@ public class JavaDatabaseProgram extends Application {
 		final Label cityLabel = new Label("City");
 		final Label stateLabel = new Label("State");
 		final Label telephoneLabel = new Label("Telephone");
-		
+
 		// Australian states
 		final ObservableList<String> stateOptions = FXCollections
 		        .observableArrayList();
@@ -317,6 +353,7 @@ public class JavaDatabaseProgram extends Application {
 		stateOptions.add("WA");
 
 		// text fields / combo box
+		// if any are filled in other than id it will disable editing id
 		final TextField idTextField = new TextField();
 		final TextField lastNameTextField = new TextField();
 		lastNameTextField.textProperty().addListener(listener -> {
@@ -358,14 +395,16 @@ public class JavaDatabaseProgram extends Application {
 				idTextField.setDisable(false);
 			}
 		});
-		final ComboBox<String> stateComboBox = new ComboBox<String>(stateOptions);
-		stateComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-			if (!isBlank(stateComboBox.getValue())) {
-				idTextField.setDisable(true);
-			} else {
-				idTextField.setDisable(false);
-			}
-		});
+		final ComboBox<String> stateComboBox = new ComboBox<String>(
+		        stateOptions);
+		stateComboBox.getSelectionModel().selectedItemProperty()
+		        .addListener((options, oldValue, newValue) -> {
+			        if (!isBlank(stateComboBox.getValue())) {
+				        idTextField.setDisable(true);
+			        } else {
+				        idTextField.setDisable(false);
+			        }
+		        });
 		final TextField telephoneTextField = new TextField();
 		telephoneTextField.textProperty().addListener(listener -> {
 			if (!isBlank(telephoneTextField.getText())) {
